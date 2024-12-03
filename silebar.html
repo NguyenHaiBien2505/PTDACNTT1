@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .slider {
+            /* position: relative; */
+            max-width: 50%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
+        }
+
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .slide img {
+            width: 100%;
+        }
+
+        /* Style cho nút điều khiển trái/phải */
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        /* Style cho các chấm chỉ số */
+        .dots {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background-color: gray;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .active {
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slider">
+        <div class="slides">
+            <div class="slide"><img src="img1.jpg" alt=""></div>
+            <div class="slide"><img src="img1.jpg" alt=""></div>
+            <div class="slide"><img src="img1.jpg" alt=""></div>
+        </div>
+        <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <div class="dots">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        let slideInterval;
+
+        // Hiển thị slide hiện tại
+        function showSlide(index) {
+            const slides = document.querySelectorAll(".slide");
+            const dots = document.querySelectorAll(".dot");
+
+            if (index >= slides.length) currentIndex = 0;
+            if (index < 0) currentIndex = slides.length - 1;
+
+            slides.forEach((slide, i) => {
+                slide.style.display = i === currentIndex ? "block" : "none";
+            });
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle("active", i === currentIndex);
+            });
+        }
+
+        // Chuyển slide
+        function changeSlide(n) {
+            resetInterval(); // Reset lại thời gian tự động chuyển slide
+            showSlide(currentIndex += n);
+        }
+
+        // Chuyển đến slide theo chấm tròn
+        function currentSlide(n) {
+            resetInterval(); // Reset lại thời gian tự động chuyển slide
+            showSlide(currentIndex = n - 1);
+        }
+
+        // Tự động chuyển slide mỗi 3 giây
+        function autoSlide() {
+            slideInterval = setInterval(() => {
+                showSlide(currentIndex += 1);
+            }, 3000); // 3000 ms = 3 giây
+        }
+
+        // Reset lại thời gian tự động chuyển slide khi người dùng tương tác
+        function resetInterval() {
+            clearInterval(slideInterval);
+            autoSlide(); // Bắt đầu lại tự động chuyển slide
+        }
+
+        // Khởi động
+        showSlide(currentIndex);
+        autoSlide(); // Bắt đầu tự động chuyển slide
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

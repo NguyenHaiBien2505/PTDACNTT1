@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="layout1.css">
+    <link rel="stylesheet" href="Font/fontawesome-free-6.6.0-web/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap%27;">
+    <title>Tạo sách mới</title>
+    <style>
+        .container_right {
+            flex: 1;
+            padding: 50px;
+            background-color: #f9f9f9;
+            /* margin-top: 50px; */
+            margin-left: 18%;
+        }
+
+        .container_right h1 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-container table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .form-container th,
+        .form-container td {
+            text-align: left;
+            padding: 10px;
+        }
+
+        .form-container input,
+        .form-container select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header_layout1">
+            <p>THƯ VIỆN TRƯỜNG THCS ABC</p>
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        <div class="header_layout2">
+            <i class="fa-solid fa-circle-user"></i>
+            <p>Administrator</p>
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </header>
+    <div class="content_menu">
+        <ul class="menu_tittle">
+            <li><i class="fa-solid fa-house"></i><a href="">Trang chủ</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-gear"></i><a href="">Hệ thống</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-newspaper"></i><a href="">Quản lý tin tức</a><i
+                    class="fa-solid fa-chevron-down"></i>
+            </li>
+            <li><i class="fa-solid fa-list-check"></i><a href="">Danh mục</a><i class="fa-solid fa-chevron-down"></i>
+            </li>
+            <li><i class="fa-solid fa-floppy-disk"></i><a href="">Trang Quản lý kho kệ</a><i
+                    class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-file-import"></i><a href="">Quản lý nhập xuất</a><i
+                    class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-book"></i><a href="TaoSach (1).html">Tạo mới sách</a><i
+                    class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-bookmark"></i><a href="">Ấn phẩm kho</a><i class="fa-solid fa-chevron-down"></i>
+            </li>
+            <li class="father_muon_tra"><i class="fa-solid fa-bandage"></i><a href="">Quản lý mượn trả</a><i
+                    class="fa-solid fa-chevron-down">
+                    <ul class="muon_tra">
+                        <li><a href="Muon_sach.html">Mượn sách</a></li>
+                        <li><a href="Tra_sach.html">Trả sách</a></li>
+                    </ul>
+                </i>
+            </li>
+            <li><i class="fa-solid fa-flag"></i><a href="">Báo cáo</a><i class="fa-solid fa-chevron-down"></i></li>
+        </ul>
+    </div>
+    <div class="container_right">
+        <h1>TẠO SÁCH MỚI</h1>
+        <div class="form-container">
+            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                <label for="fileUpload">Chọn ảnh:</label>
+                <input type="file" id="fileUpload" name="image" accept="image/*">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><label for="masach">Mã sách:</label></td>
+                            <td><input type="text" id="masach" name="masach"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="tensach">Tên sách:</label></td>
+                            <td><input type="text" id="tensach" name="tensach"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="tentg">Tên tác giả:</label></td>
+                            <td><input type="text" id="tentg" name="tentg"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="loaisach">Loại sách:</label></td>
+                            <td>
+                                <select id="loaisach" name="loaisach">
+                                    <option value="truyenngan">Truyện ngắn</option>
+                                    <option value="tieuthuyet">Tiểu thuyết</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="manxb">Nhà xuất bản:</label></td>
+                            <td>
+                                <select id="manxb" name="manxb">
+                                    <option value="kimdong">Kim Đồng</option>
+                                    <option value="nxbtre">NXB Trẻ</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giatien">Giá tiền:</label></td>
+                            <td><input type="number" id="giatien" name="giatien"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="soluong">Số lượng:</label></td>
+                            <td><input type="number" id="soluong" name="soluong"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="mota">Mô tả:</label></td>
+                            <td><textarea id="mota" name="mota" rows="3"></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit">Tạo mới</button>
+                <button type="reset">Đặt lại</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
