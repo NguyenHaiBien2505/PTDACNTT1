@@ -4,6 +4,11 @@ public class TheLoai {
     private String maTheLoai;
     private String tenTheLoai;
 
+    public TheLoai(String maTheLoai, String tenTheLoai) {
+        this.maTheLoai = maTheLoai;
+        this.tenTheLoai = tenTheLoai;
+    }
+
     // Getters and Setters
     public String getMaTheLoai() {
         return maTheLoai;

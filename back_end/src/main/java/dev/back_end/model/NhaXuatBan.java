@@ -4,6 +4,11 @@ public class NhaXuatBan {
     private String maNhaXuatBan;
     private String tenNhaXuatBan;
 
+    public NhaXuatBan(String maNhaXuatBan, String tenNhaXuatBan) {
+        this.maNhaXuatBan = maNhaXuatBan;
+        this.tenNhaXuatBan = tenNhaXuatBan;
+    }
+
     // Getters and Setters
     public String getMaNhaXuatBan() {
         return maNhaXuatBan;

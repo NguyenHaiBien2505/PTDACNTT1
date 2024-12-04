@@ -404,7 +404,7 @@
             <tr th:each="sach, iterStat : ${books}">
                 <td th:text="${iterStat.count}">1</td>
                 <td th:text="${sach.maSach}">S001</td>
-                <td><img th:src="@{/images/{image}(image=${sach.anh})}" alt="Book Image" width="50"></td>
+                <td><img th:src="${sach.anh}" alt="Book Image" width="50"></td>
                 <td th:text="${sach.tenSach}">Dế Mèn Phiêu Lưu Ký</td>
                 <td th:text="${sach.tenTacGia}">Tô Hoài</td>
                 <td th:text="${sach.maTheLoai}">TL001</td>

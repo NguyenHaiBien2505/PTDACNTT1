@@ -11,6 +11,9 @@ public class Sach {
     private int soLuong;
     private String moTa;
 
+    public Sach() {
+    }
+
     public Sach(String maSach, String anh, String tenSach, String tenTacGia, String maTheLoai, String maNhaXuatBan, double gia, int soLuong, String moTa) {
         this.maSach = maSach;
         this.anh = anh;

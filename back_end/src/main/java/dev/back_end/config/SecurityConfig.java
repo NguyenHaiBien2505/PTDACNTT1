@@ -12,11 +12,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 import dev.back_end.dao.taiKhoanDao;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
     @Autowired
     taiKhoanDao taiKhoanDao;
+
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request -> request
@@ -34,14 +36,15 @@ public class SecurityConfig {
                 );
         return httpSecurity.build();
     }
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
             // Logic lấy thông tin user từ database
-                TaiKhoan tk = taiKhoanDao.getTaiKhoanByUserName(username);
-            if (username.equals(tk.getMaTK())) {
+            TaiKhoan tk = taiKhoanDao.getTaiKhoanByUserName(username);
+            if (tk != null && tk.isVaiTro() && username.equals(tk.getMaTK())) {
                 return User.withUsername(tk.getMaTK())
-                        .password("{noop}"+tk.getMatKhau()) // Dùng "{noop}" để không mã hóa
+                        .password("{noop}" + tk.getMatKhau()) // Dùng "{noop}" để không mã hóa
                         .roles(tk.isVaiTro() ? "DOCGIA" : "THUTHU")
                         .build();
             }
