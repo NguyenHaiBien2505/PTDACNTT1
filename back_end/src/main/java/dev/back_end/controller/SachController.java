@@ -1,5 +1,6 @@
 package dev.back_end.controller;
 
+import dev.back_end.model.ChiTietPhieu;
 import dev.back_end.model.NhaXuatBan;
 import dev.back_end.model.Sach;
 import dev.back_end.model.TheLoai;
@@ -27,6 +28,7 @@ public class SachController {
     @Autowired
     private dev.back_end.dao.taiKhoanDao taiKhoanDao;
 
+
     // Mapping to the borrowing page
     @GetMapping("/muon-sach")
     public String muonSach() {
@@ -45,6 +47,7 @@ public class SachController {
         model.addAttribute("books", bookDao.getAllBooks());
         return "Danh_sach_sach";
     }
+
     //add book
     @GetMapping("/tao-sach")
     public String addBookForm(Model model) {
@@ -54,6 +57,7 @@ public class SachController {
         model.addAttribute("nhaXuatBans", nhaXuatBans);
         return "Tao_sach";
     }
+
     //Add book
     @PostMapping("/tao-sach")
     public String addBookForm(Model model, @RequestParam("masach") String maSach,
@@ -91,11 +95,38 @@ public class SachController {
     public String editBookForm(@PathVariable("id") String id, Model model) {
         Sach sach = bookDao.getBookById(id);
         model.addAttribute("sach", sach);
-        return "Edit_sach";
+        List<TheLoai> theLoaiList = new dev.back_end.dao.theLoaiDao().getAll();
+        List<NhaXuatBan> nhaXuatBans = new dev.back_end.dao.nhaXuatBanDao().getAll();
+        model.addAttribute("theLoaiList", theLoaiList);
+        model.addAttribute("nhaXuatBans", nhaXuatBans);
+        return "Sua_sach";
     }
 
-    @PostMapping("/edit")
-    public String editBook(@ModelAttribute Sach sach) {
+    @PostMapping("/sua-sach")
+    public String editBook(@RequestParam("masach") String maSach,
+                           @RequestParam("tensach") String tenSach,
+                           @RequestParam("tentg") String tenTacGia,
+                           @RequestParam("loaisach") String loaiSach,
+                           @RequestParam("manxb") String maNhaXuatBan,
+                           @RequestParam("giatien") double giaTien,
+                           @RequestParam("soluong") int soLuong,
+                           @RequestParam("mota") String moTa,
+                           @RequestParam("image") MultipartFile image) {
+        Sach sach = new Sach();
+        sach.setMaSach(maSach);
+        sach.setTenSach(tenSach);
+        sach.setTenTacGia(tenTacGia);
+        sach.setMaTheLoai(loaiSach);
+        sach.setMaNhaXuatBan(maNhaXuatBan);
+        sach.setGia(giaTien);
+        sach.setSoLuong(soLuong);
+        sach.setMoTa(moTa);
+        //convert img to base64
+        try {
+            sach.setAnh(ConvertImage.convertMultipartFileToBase64WithMimeType(image));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         bookDao.editBook(sach);
         return "redirect:/sach/danhSachSach";
     }
@@ -123,7 +154,17 @@ public class SachController {
         }
         return "Muon_sach"; // Return to the borrowing page
     }
+    @GetMapping("/tra-mot-sach")
+    public String traSach(Model model, @RequestParam String maPhieu, @RequestParam String maHocSinh, @RequestParam String maSach) {
+        bookDao.traSach(maPhieu,maSach);
+        return "redirect:/sach/loadHocSinh/"+maHocSinh+"--Tra_sach";
+    }
 
+    @GetMapping("/tra-tat-ca-sach")
+    public String traTatCaSach(@RequestParam String maHocSinh) {
+        bookDao.traTatCaSach(maHocSinh);
+        return "redirect:/sach/loadHocSinh/"+maHocSinh+"--Tra_sach";
+    }
     //load thong tin hoc sinh
     @GetMapping("/loadHocSinh/{maHocSinh}")
     public String loadHocSinh(@PathVariable("maHocSinh") String studentId, Model model) {
@@ -134,6 +175,13 @@ public class SachController {
             return strings[1];
         }
         model.addAttribute("student", taiKhoanDao.getTaiKhoanByUserName(strings[0]));
+        if (strings[1] .equals("Tra_sach")) {
+            List<ChiTietPhieu> chiTietPhieus = bookDao.getSachDangMuonBoiHocSinh(strings[0]);
+            log.info(chiTietPhieus);
+            if (chiTietPhieus != null) {
+                model.addAttribute("sachMuon", chiTietPhieus);
+            }
+        }
         return strings[1];
     }
 

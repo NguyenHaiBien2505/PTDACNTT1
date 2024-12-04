@@ -1,5 +1,6 @@
 package dev.back_end.dao;
 
+import dev.back_end.model.ChiTietPhieu;
 import dev.back_end.model.Sach;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,30 @@ public class bookDao extends DBContext {
         }
         return list;
     }
+
+    public boolean traSach(String maPhieu, String maSach) {
+        String sql = "update ChiTietPhieu set TrangThai = 'Đã Trả' where MaPhieu = ? and MaSach = ?";
+        try (PreparedStatement pre = connect().prepareStatement(sql)) {
+            pre.setString(1, maPhieu);
+            pre.setString(2, maSach);
+            return pre.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean traTatCaSach(String maHocSinh) {
+        String sql = "update ChiTietPhieu set TrangThai = 'Đã Trả' where MaPhieu in (select MaPhieu from PhieuMuonTra where MaDocGia = ?)";
+        try (PreparedStatement pre = connect().prepareStatement(sql)) {
+            pre.setString(1, maHocSinh);
+            return pre.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean editBook(Sach sach) {
         String query = "UPDATE Sach SET Anh = ?, TenSach = ?, TenTacGia = ?, MaTheLoai = ?, MaNhaXuatBan = ?, Gia = ?, SoLuong = ?, MoTa = ? WHERE MaSach = ?";
         try (PreparedStatement pre = connect().prepareStatement(query)) {
@@ -49,73 +74,74 @@ public class bookDao extends DBContext {
             return false;
         }
     }
+
     public boolean deleteBook(String maSach) {
-    String query = "DELETE FROM Sach WHERE MaSach = ?";
-    try (PreparedStatement pre = connect().prepareStatement(query)) {
-        pre.setString(1, maSach);
-        return pre.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
-    }
-}
-
-
-public boolean borrowBooks(String maThuThu, String studentId, List<String> bookIds, List<String> borrowDates, List<String> returnDates) {
-    String insertPhieuMuonTra = "INSERT INTO PhieuMuonTra (MaPhieu, MaThuThu, MaDocGia) VALUES (?, ?, ?)";
-    String insertChiTietPhieu = "INSERT INTO ChiTietPhieu (MaSach, MaPhieu, NgayMuon, NgayTra, TrangThai) VALUES (?, ?, ?, ?, ?)";
-
-    Connection conn = null;
-    PreparedStatement psPhieuMuonTra = null;
-    PreparedStatement psChiTietPhieu = null;
-
-    try {
-        conn = connect();
-        conn.setAutoCommit(false);
-
-        String maPhieu = UUID.randomUUID().toString().substring(0,20);
-
-        // Insert into PhieuMuonTra
-        psPhieuMuonTra = conn.prepareStatement(insertPhieuMuonTra);
-        psPhieuMuonTra.setString(1, maPhieu);
-        psPhieuMuonTra.setString(2, maThuThu); // Replace with actual MaThuThu
-        psPhieuMuonTra.setString(3, studentId);
-        psPhieuMuonTra.executeUpdate();
-
-        // Insert into ChiTietPhieu
-        psChiTietPhieu = conn.prepareStatement(insertChiTietPhieu);
-        for (int i = 0; i < bookIds.size(); i++) {
-            psChiTietPhieu.setString(1, bookIds.get(i));
-            psChiTietPhieu.setString(2, maPhieu);
-            psChiTietPhieu.setDate(3, java.sql.Date.valueOf(borrowDates.get(i)));
-            psChiTietPhieu.setDate(4, java.sql.Date.valueOf(returnDates.get(i)));
-            psChiTietPhieu.setString(5, "Đang mượn");
-            psChiTietPhieu.addBatch();
+        String query = "DELETE FROM Sach WHERE MaSach = ?";
+        try (PreparedStatement pre = connect().prepareStatement(query)) {
+            pre.setString(1, maSach);
+            return pre.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        psChiTietPhieu.executeBatch();
+    }
 
-        conn.commit();
-        return true;
-    } catch ( SQLException e) {
-        if (conn != null) {
+
+    public boolean borrowBooks(String maThuThu, String studentId, List<String> bookIds, List<String> borrowDates, List<String> returnDates) {
+        String insertPhieuMuonTra = "INSERT INTO PhieuMuonTra (MaPhieu, MaThuThu, MaDocGia) VALUES (?, ?, ?)";
+        String insertChiTietPhieu = "INSERT INTO ChiTietPhieu (MaSach, MaPhieu, NgayMuon, NgayTra, TrangThai) VALUES (?, ?, ?, ?, ?)";
+
+        Connection conn = null;
+        PreparedStatement psPhieuMuonTra = null;
+        PreparedStatement psChiTietPhieu = null;
+
+        try {
+            conn = connect();
+            conn.setAutoCommit(false);
+
+            String maPhieu = UUID.randomUUID().toString().substring(0, 20);
+
+            // Insert into PhieuMuonTra
+            psPhieuMuonTra = conn.prepareStatement(insertPhieuMuonTra);
+            psPhieuMuonTra.setString(1, maPhieu);
+            psPhieuMuonTra.setString(2, maThuThu); // Replace with actual MaThuThu
+            psPhieuMuonTra.setString(3, studentId);
+            psPhieuMuonTra.executeUpdate();
+
+            // Insert into ChiTietPhieu
+            psChiTietPhieu = conn.prepareStatement(insertChiTietPhieu);
+            for (int i = 0; i < bookIds.size(); i++) {
+                psChiTietPhieu.setString(1, bookIds.get(i));
+                psChiTietPhieu.setString(2, maPhieu);
+                psChiTietPhieu.setDate(3, java.sql.Date.valueOf(borrowDates.get(i)));
+                psChiTietPhieu.setDate(4, java.sql.Date.valueOf(returnDates.get(i)));
+                psChiTietPhieu.setString(5, "Đang mượn");
+                psChiTietPhieu.addBatch();
+            }
+            psChiTietPhieu.executeBatch();
+
+            conn.commit();
+            return true;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
             try {
-                conn.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+                if (psPhieuMuonTra != null) psPhieuMuonTra.close();
+                if (psChiTietPhieu != null) psChiTietPhieu.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        e.printStackTrace();
-        return false;
-    } finally {
-        try {
-            if (psPhieuMuonTra != null) psPhieuMuonTra.close();
-            if (psChiTietPhieu != null) psChiTietPhieu.close();
-            if (conn != null) conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
-}
 
     public static void main(String[] args) {
         bookDao bookDao = new bookDao();
@@ -123,31 +149,35 @@ public boolean borrowBooks(String maThuThu, String studentId, List<String> bookI
         for (Sach sach : list) {
             System.out.println(sach.getTenSach());
         }
+        List<ChiTietPhieu> chiTietPhieuList = bookDao.getSachDangMuonBoiHocSinh("DG001");
+        for (ChiTietPhieu chiTietPhieu : chiTietPhieuList) {
+            System.out.println(chiTietPhieu.getMaSach());
+        }
     }
 
-   public Sach getBookById(String id) {
-    String query = "SELECT * FROM Sach WHERE MaSach = ?";
-    try (PreparedStatement pre = connect().prepareStatement(query)) {
-        pre.setString(1, id);
-        ResultSet rs = pre.executeQuery();
-        if (rs.next()) {
-            return new Sach(
-                rs.getString("MaSach"),
-                rs.getString("Anh"),
-                rs.getString("TenSach"),
-                rs.getString("TenTacGia"),
-                rs.getString("MaTheLoai"),
-                rs.getString("MaNhaXuatBan"),
-                rs.getDouble("Gia"),
-                rs.getInt("SoLuong"),
-                rs.getString("MoTa")
-            );
+    public Sach getBookById(String id) {
+        String query = "SELECT * FROM Sach WHERE MaSach = ?";
+        try (PreparedStatement pre = connect().prepareStatement(query)) {
+            pre.setString(1, id);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return new Sach(
+                        rs.getString("MaSach"),
+                        rs.getString("Anh"),
+                        rs.getString("TenSach"),
+                        rs.getString("TenTacGia"),
+                        rs.getString("MaTheLoai"),
+                        rs.getString("MaNhaXuatBan"),
+                        rs.getDouble("Gia"),
+                        rs.getInt("SoLuong"),
+                        rs.getString("MoTa")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return null;
     }
-    return null;
-}
 
     public void addBook(Sach sach) {
         String query = "INSERT INTO Sach (MaSach, Anh, TenSach, TenTacGia, MaTheLoai, MaNhaXuatBan, Gia, SoLuong, MoTa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -165,5 +195,47 @@ public boolean borrowBooks(String maThuThu, String studentId, List<String> bookI
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<ChiTietPhieu> getSachDangMuonBoiHocSinh(String maHocSinh) {
+        List<ChiTietPhieu> list = null;
+        String query = "SELECT * FROM ChiTietPhieu WHERE  MaPhieu in (\n" +
+                "SELECT MaPhieu FROM quanlythuvien.phieumuontra where MaDocGia = ?) and TrangThai = 'Đang mượn';";
+        try (PreparedStatement pre = connect().prepareStatement(query)) {
+            pre.setString(1, maHocSinh);
+            ResultSet rs = pre.executeQuery();
+            list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(new ChiTietPhieu(rs.getString("MaSach"), rs.getString("MaPhieu"), rs.getDate("NgayMuon"), rs.getDate("NgayTra"), rs.getString("TrangThai")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public Sach getSachByMaSach(String maSach) {
+        String query = "SELECT * FROM Sach WHERE MaSach = ?";
+        try {
+            PreparedStatement pre = connect().prepareStatement(query);
+            pre.setString(1, maSach);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                return new Sach(
+                        rs.getString("MaSach"),
+                        rs.getString("Anh"),
+                        rs.getString("TenSach"),
+                        rs.getString("TenTacGia"),
+                        rs.getString("MaTheLoai"),
+                        rs.getString("MaNhaXuatBan"),
+                        rs.getDouble("Gia"),
+                        rs.getInt("SoLuong"),
+                        rs.getString("MoTa")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

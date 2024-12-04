@@ -9,6 +9,14 @@ public class ChiTietPhieu {
     private Date ngayTra;
     private String trangThai;
 
+    public ChiTietPhieu(String maSach, String maPhieu, Date ngayMuon, Date ngayTra, String trangThai) {
+        this.maSach = maSach;
+        this.maPhieu = maPhieu;
+        this.ngayMuon = ngayMuon;
+        this.ngayTra = ngayTra;
+        this.trangThai = trangThai;
+    }
+
     // Getters and Setters
     public String getMaSach() {
         return maSach;
