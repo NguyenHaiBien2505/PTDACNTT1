@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/layout1.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap">
+    <title>Tạo sách mới</title>
+    <style>
+        .container_right {
+            flex: 1;
+            padding: 50px;
+            background-color: #f9f9f9;
+            margin-left: 18%;
+        }
+
+        .container_right h1 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-container table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .form-container th,
+        .form-container td {
+            text-align: left;
+            padding: 10px;
+        }
+
+        .form-container input,
+        .form-container select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-container button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        /* Modal (Popup) Style */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .modal-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header_layout1">
+            <p>THƯ VIỆN TRƯỜNG THCS ABC</p>
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        <div class="header_layout2">
+            <i class="fa-solid fa-circle-user"></i>
+            <p>Administrator</p>
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </header>
+    <div class="content_menu">
+        <ul class="menu_tittle">
+            <li><i class="fa-solid fa-house"></i><a th:href="@{/static}">Trang chủ</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-gear"></i><a th:href="@{/he-thong}">Hệ thống</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-newspaper"></i><a th:href="@{/quan-ly-tin-tuc}">Quản lý tin tức</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-list-check"></i><a th:href="@{/danh-muc}">Danh mục</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-floppy-disk"></i><a th:href="@{/quan-ly-kho-ke}">Trang Quản lý kho kệ</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-file-import"></i><a th:href="@{/quan-ly-nhap-xuat}">Quản lý nhập xuất</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-book"></i><a th:href="@{/sach/tao-sach}">Tạo mới sách</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li><i class="fa-solid fa-bookmark"></i><a th:href="@{/sach/danhSachSach}">Ấn phẩm kho</a><i class="fa-solid fa-chevron-down"></i></li>
+            <li class="father_muon_tra"><i class="fa-solid fa-bandage"></i><a th:href="@{/quan-ly-muon-tra}">Quản lý mượn trả</a><i class="fa-solid fa-chevron-down">
+                    <ul class="muon_tra">
+                        <li><a th:href="@{/sach/muon-sach}">Mượn sách</a></li>
+                        <li><a th:href="@{/sach/tra-sach}">Trả sách</a></li>
+                    </ul>
+                </i>
+            </li>
+            <li><i class="fa-solid fa-flag"></i><a th:href="@{/bao-cao}">Báo cáo</a><i class="fa-solid fa-chevron-down"></i></li>
+        </ul>
+    </div>
+    <div class="container_right">
+        <h1>TẠO SÁCH MỚI</h1>
+        <div class="form-container">
+            <form id="uploadForm" th:action="@{/upload}" method="post" enctype="multipart/form-data">
+                <label for="fileUpload">Chọn ảnh:</label>
+                <input type="file" id="fileUpload" name="image" accept="image/*">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><label for="masach">Mã sách:</label></td>
+                            <td><input type="text" id="masach" name="masach"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="tensach">Tên sách:</label></td>
+                            <td><input type="text" id="tensach" name="tensach"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="tentg">Tên tác giả:</label></td>
+                            <td><input type="text" id="tentg" name="tentg"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="loaisach">Loại sách:</label></td>
+                            <td>
+                                <select id="loaisach" name="loaisach">
+                                    <option value="truyenngan">Truyện ngắn</option>
+                                    <option value="tieuthuyet">Tiểu thuyết</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="manxb">Nhà xuất bản:</label></td>
+                            <td>
+                                <select id="manxb" name="manxb">
+                                    <option value="kimdong">Kim Đồng</option>
+                                    <option value="nxbtre">NXB Trẻ</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giatien">Giá tiền:</label></td>
+                            <td><input type="number" id="giatien" name="giatien"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="soluong">Số lượng:</label></td>
+                            <td><input type="number" id="soluong" name="soluong"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="mota">Mô tả:</label></td>
+                            <td><textarea id="mota" name="mota" rows="5" cols="90"></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit" onclick="validateForm(event)">Tạo mới</button>
+                <button type="button" onclick="resetForm()">Đặt lại</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal (Popup) -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <p>Tạo mới sách thành công!</p>
+            <button class="modal-button" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // Validate form function
+        function validateForm(event) {
+            event.preventDefault(); // Ngừng việc gửi form mặc định
+
+            const masach = document.getElementById("masach").value;
+            const tensach = document.getElementById("tensach").value;
+            const tentg = document.getElementById("tentg").value;
+            const loaisach = document.getElementById("loaisach").value;
+            const manxb = document.getElementById("manxb").value;
+            const giatien = document.getElementById("giatien").value;
+            const soluong = document.getElementById("soluong").value;
+            const mota = document.getElementById("mota").value;
+
+            // Kiểm tra các trường không trống
+            if (!masach || !tensach || !tentg || !loaisach || !manxb || !giatien || !soluong || !mota) {
+                alert("Vui lòng điền đầy đủ thông tin.");
+                return;
+            }
+
+            // Hiển thị thông báo thành công
+            document.getElementById("successModal").style.display = "block";
+        }
+
+        // Đóng modal
+        function closeModal() {
+            document.getElementById("successModal").style.display = "none";
+        }
+
+        // Reset form function
+        function resetForm() {
+            const form = document.getElementById("uploadForm");
+            form.reset();
+        }
+    </script>
+</body>
+
+</html>
