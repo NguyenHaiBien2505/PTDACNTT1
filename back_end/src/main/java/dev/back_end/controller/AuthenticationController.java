@@ -41,25 +41,7 @@ public class AuthenticationController {
         log.info("Forgot password page requested");
         return "forgot";
     }
-
-    @PostMapping("/login")
-    public String loginMethod(HttpSession session,
-                              @RequestParam("username") String username,
-                              @RequestParam("password") String password) {
-        log.info("Login attempt for username: {}", username);
-
-        // Replace with your actual user validation logic
-        if ("admin".equals(username) && "password".equals(password)) {
-            session.setAttribute("user", username);
-            return "redirect:/sach/danhSachSach";
-        } else {
-            log.warn("Invalid login attempt for username: {}", username);
-            return "redirect:/auth/login?error=true";
-        }
-    }
-
-
-
+    
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
