@@ -35,7 +35,12 @@ public class AuthenticationController {
     public String register() {
         return "register";
     }
-
+    @PostMapping("/register")
+    public String register(@RequestParam String maTK, @RequestParam String tenHienThi, @RequestParam String matKhau) {
+        TaiKhoan taiKhoan = new TaiKhoan(maTK, matKhau, tenHienThi,true,true);
+        taiKhoanDao.save(taiKhoan);
+        return "redirect:/auth/login";
+    }
     @GetMapping("/forgot-password")
     public String forgotPassword() {
         log.info("Forgot password page requested");

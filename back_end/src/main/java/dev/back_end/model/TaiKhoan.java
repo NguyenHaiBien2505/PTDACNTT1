@@ -8,8 +8,19 @@ public class TaiKhoan implements Serializable {
     private String maTK;
     private String matKhau;
     private String tenHienThi;
-    private boolean vaiTro;
-    private boolean trangThai;
+    private boolean vaiTro = true;
+    private boolean trangThai = true;
+
+    public TaiKhoan() {
+    }
+
+    public TaiKhoan(String maTK, String matKhau, String tenHienThi, boolean vaiTro, boolean trangThai) {
+        this.maTK = maTK;
+        this.matKhau = matKhau;
+        this.tenHienThi = tenHienThi;
+        this.vaiTro = vaiTro;
+        this.trangThai = trangThai;
+    }
 
     // Getters and Setters
     public String getMaTK() {
