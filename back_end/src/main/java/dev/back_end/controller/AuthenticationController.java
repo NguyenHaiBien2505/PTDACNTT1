@@ -9,6 +9,7 @@ import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +37,12 @@ public class AuthenticationController {
         return "register";
     }
     @PostMapping("/register")
-    public String register(@RequestParam String maTK, @RequestParam String tenHienThi, @RequestParam String matKhau) {
+    public String register(@RequestParam String maTK, @RequestParam String tenHienThi, @RequestParam String matKhau, Model model) {
         TaiKhoan taiKhoan = new TaiKhoan(maTK, matKhau, tenHienThi,true,true);
-        taiKhoanDao.save(taiKhoan);
+        if(!taiKhoanDao.save(taiKhoan)){
+            model.addAttribute("message", "Username already exists");
+            return "register";
+        };
         return "redirect:/auth/login";
     }
     @GetMapping("/forgot-password")

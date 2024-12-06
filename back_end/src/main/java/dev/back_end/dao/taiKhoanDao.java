@@ -48,7 +48,11 @@ public class taiKhoanDao extends DBContext{
         System.out.println(taiKhoanDao.checkLogin("TT001","123456"));
     }
 
-    public void save(TaiKhoan taiKhoan) {
+    public boolean save(TaiKhoan taiKhoan) {
+        TaiKhoan taiKhoan1 = taiKhoanDao().getTaiKhoanByUserName(taiKhoan.getMaTK());
+        if(taiKhoan1 != null){
+            return false;
+        }
         String query = "INSERT INTO TaiKhoan VALUES(?,?,?,?,?)";
         try (PreparedStatement pre = connect().prepareStatement(query)) {
             pre.setString(1, taiKhoan.getMaTK());
@@ -56,9 +60,10 @@ public class taiKhoanDao extends DBContext{
             pre.setString(3, taiKhoan.getTenHienThi());
             pre.setBoolean(4, taiKhoan.isVaiTro());
             pre.setBoolean(5, taiKhoan.isTrangThai());
-            pre.executeUpdate();
+            return pre.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 }
